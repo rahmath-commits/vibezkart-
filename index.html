@@ -7,11 +7,12 @@
     <style>
         body { font-family: sans-serif; margin: 0; padding-bottom: 70px; background: #f4f4f4; }
         header { background: #333; color: white; padding: 15px; text-align: center; }
-        .page { display: none; padding: 20px; }
-        .active { display: block; }
-        .nav-bar { position: fixed; bottom: 0; width: 100%; display: flex; justify-content: space-around; background: #fff; padding: 15px 0; border-top: 2px solid #ddd; }
-        button { background: #ff9800; border: none; padding: 10px; color: white; border-radius: 5px; cursor: pointer; width: 100%; }
-        .nav-item { cursor: pointer; font-weight: bold; color: #333; }
+        .filter-bar { display: flex; overflow-x: auto; padding: 10px; background: #fff; gap: 10px; }
+        .product-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; padding: 15px; }
+        .card { background: white; padding: 10px; border-radius: 10px; text-align: center; }
+        .card img { width: 100%; height: 100px; object-fit: cover; border-radius: 8px; }
+        .nav-bar { position: fixed; bottom: 0; width: 100%; display: flex; justify-content: space-around; background: #fff; padding: 15px 0; border-top: 1px solid #ddd; }
+        .page { display: none; } .active { display: block; }
     </style>
 </head>
 <body>
@@ -19,33 +20,59 @@
 <header><h1>VibezKart</h1></header>
 
 <div id="home" class="page active">
-    <h2>Categories</h2>
-    <p>Electronics | Fashion | Groceries</p>
-    <div style="background:white; padding:15px; border-radius:8px;">
-        <h3>Fresh Organic Blueberries</h3>
-        <img src="https://images.unsplash.com/photo-1557800636-894a64c1696f?w=500" style="width:100%; border-radius:8px 8px 0 0;" alt="Product Image">
-        
-        <p>Price: ₹199</p>
-        <button onclick="alert('Added to Cart!')">Add to Cart</button>
+    <div class="filter-bar">
+        <button onclick="renderProducts('Electronics')">Electronics</button>
+        <button onclick="renderProducts('Fashion')">Fashion</button>
+        <button onclick="renderProducts('Groceries')">Groceries</button>
     </div>
+    <div id="product-container" class="product-grid"></div>
 </div>
 
-<div id="wishlist" class="page"><h2>Wishlist</h2><p>Your saved items will be here.</p></div>
-<div id="cart" class="page"><h2>Your Cart</h2><p>Items you added.</p></div>
-<div id="profile" class="page"><h2>Profile</h2><p>Settings & Account details.</p></div>
-
-<div class="nav-bar">
-    <div class="nav-item" onclick="showPage('home')">Home</div>
-    <div class="nav-item" onclick="showPage('wishlist')">Wishlist</div>
-    <div class="nav-item" onclick="showPage('cart')">Cart</div>
-    <div class="nav-item" onclick="showPage('profile')">Profile</div>
+<div id="cart" class="page"><h2>Your Cart</h2></div>
+<div id="nav-bar" class="nav-bar">
+    <div onclick="showPage('home')">Home</div>
+    <div onclick="showPage('cart')">Cart</div>
 </div>
 
 <script>
-    function showPage(pageId) {
-        document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-        document.getElementById(pageId).classList.add('active');
-    }
+        const products = [
+        // Electronics (10)
+        { cat: "Electronics", name: "Headphone", price: "₹999", img: "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=200" },
+        { cat: "Electronics", name: "Smart Watch", price: "₹1499", img: "https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=200" },
+        { cat: "Electronics", name: "Camera", price: "₹45000", img: "https://images.unsplash.com/photo-1511556532299-8f662526c06a?w=200" },
+        { cat: "Electronics", name: "Gaming Mouse", price: "₹799", img: "https://images.unsplash.com/photo-1555529669-e69e73004f47?w=200" },
+        { cat: "Electronics", name: "Laptop", price: "₹35000", img: "https://images.unsplash.com/photo-1496181133206-80ce9b88a853?w=200" },
+        { cat: "Electronics", name: "Keyboard", price: "₹1200", img: "https://images.unsplash.com/photo-1587829741301-dc798b83add3?w=200" },
+        { cat: "Electronics", name: "Speaker", price: "₹2500", img: "https://images.unsplash.com/photo-1545454675-3531b5402efd?w=200" },
+        { cat: "Electronics", name: "Tablet", price: "₹15000", img: "https://images.unsplash.com/photo-1542751110-d866a401c448?w=200" },
+        { cat: "Electronics", name: "Power Bank", price: "₹900", img: "https://images.unsplash.com/photo-1609592882859-994191632001?w=200" },
+        { cat: "Electronics", name: "Monitor", price: "₹8000", img: "https://images.unsplash.com/photo-1527443224154-c4a3942d3a35?w=200" },
+        
+        // Fashion (10)
+        { cat: "Fashion", name: "Running Shoes", price: "₹2999", img: "https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=200" },
+        { cat: "Fashion", name: "Sunglasses", price: "₹399", img: "https://images.unsplash.com/photo-1544441893-675973e31985?w=200" },
+        { cat: "Fashion", name: "Handbag", price: "₹1200", img: "https://images.unsplash.com/photo-1590874103328-e638a683404c?w=200" },
+        { cat: "Fashion", name: "T-Shirt", price: "₹499", img: "https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?w=200" },
+        { cat: "Fashion", name: "Jacket", price: "₹2500", img: "https://images.unsplash.com/photo-1591047139829-d91aecb6caea?w=200" },
+        { cat: "Fashion", name: "Watch (Classic)", price: "₹1800", img: "https://images.unsplash.com/photo-1524592094714-0f0654e20314?w=200" },
+        { cat: "Fashion", name: "Jeans", price: "₹1500", img: "https://images.unsplash.com/photo-1542272604-787c3835535d?w=200" },
+        { cat: "Fashion", name: "Hat", price: "₹300", img: "https://images.unsplash.com/photo-1533827432537-70133748f5c8?w=200" },
+        { cat: "Fashion", name: "Wallet", price: "₹500", img: "https://images.unsplash.com/photo-1627123424574-724758594e93?w=200" },
+        { cat: "Fashion", name: "Dress", price: "₹2000", img: "https://images.unsplash.com/photo-1572804013309-59a88b7e92f1?w=200" },
+
+        // Groceries (10)
+        { cat: "Groceries", name: "Blueberries", price: "₹199", img: "https://images.unsplash.com/photo-1557800636-894a64c1696f?w=200" },
+        { cat: "Groceries", name: "Coffee", price: "₹250", img: "https://images.unsplash.com/photo-1559056199-641a0ac8b55e?w=200" },
+        { cat: "Groceries", name: "Milk", price: "₹60", img: "https://images.unsplash.com/photo-1563636619-e9143da7b75b?w=200" },
+        { cat: "Groceries", name: "Bread", price: "₹40", img: "https://images.unsplash.com/photo-1509440159596-0249088772ff?w=200" },
+        { cat: "Groceries", name: "Banana", price: "₹50", img: "https://images.unsplash.com/photo-1571771894821-ce9b6c11b08e?w=200" },
+        { cat: "Groceries", name: "Honey", price: "₹300", img: "https://images.unsplash.com/photo-1587049352846-4a222e784d38?w=200" },
+        { cat: "Groceries", name: "Eggs", price: "₹100", img: "https://images.unsplash.com/photo-1582722872445-44dc5f7e3c8f?w=200" },
+        { cat: "Groceries", name: "Apple", price: "₹150", img: "https://images.unsplash.com/photo-1560806887-1e4cd0b61622?w=200" },
+        { cat: "Groceries", name: "Tea", price: "₹200", img: "https://images.unsplash.com/photo-1564890369478-c89da6d94928?w=200" },
+        { cat: "Groceries", name: "Rice", price: "₹80", img: "https://images.unsplash.com/photo-1586201375761-83865001e31c?w=200" }
+    ];
+    
 </script>
 </body>
 </html>
