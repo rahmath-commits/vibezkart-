@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VibezKart</title>
+    <style>
+        body { font-family: sans-serif; margin: 0; background-color: #f7f9fa; }
+        .page { display: none; } /* Hide all pages by default */
+        .active { display: block; } /* Show only active page */
+        .header { background: #111; color: #fff; padding: 20px; text-align: center; font-weight: 900; }
+        .product-card { background: white; margin: 15px; padding: 15px; border-radius: 12px; text-align: center; }
+        .product-card img { width: 100%; max-height: 150px; object-fit: contain; }
+        .btn { background: #ffaa00; border: none; padding: 12px; width: 100%; border-radius: 25px; font-weight: bold; }
+    </style>
+</head>
+<body>
+
+    <div id="home" class="page active">
+        <div class="header">VIBEZKART</div>
+        
+        <div class="product-card">
+            <img src="https://images.unsplash.com/photo-1557800636-894a64c1696f?w=400" alt="Blueberry">
+            <h3>Fresh Organic Blueberries</h3>
+            <p>₹199</p>
+            <button class="btn" onclick="showPage('cart')">Buy Now</button>
+        </div>
+    </div>
+
+    <div id="cart" class="page">
+        <div class="header">YOUR CART</div>
+        <div class="product-card">
+            <h3>Added to Bag! 🛒</h3>
+            <p>You have selected: <b>Blueberries</b></p>
+            <button class="btn" onclick="showPage('home')">Back to Shop</button>
+        </div>
+    </div>
+
+    <script>
+        function showPage(pageId) {
+            document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+            document.getElementById(pageId).classList.add('active');
+        }
+    </script>
+</body>
+</html>
